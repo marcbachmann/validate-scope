@@ -53,7 +53,6 @@ bench('traditional for loop & array indexOf', function (b) {
 })
 
 function contains (mandatory, scopes) {
-  if (scopes.length < mandatory.length) return false
   for (var i = 0; i < mandatory.length; i++) {
     if (!~scopes.indexOf(mandatory[i])) return false
   }
