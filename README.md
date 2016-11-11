@@ -9,7 +9,6 @@ var validate = require('validate-scope')(['user:edit'])
 
 // pass an array
 validate(['profile', 'user:edit']) // returns true
-validate(['profile', 'user:archive']) // returns true
 validate(['profile', 'another-scope']) // returns false
 
 // or a string of scopes separated by whitespaces
