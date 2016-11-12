@@ -1,48 +1,50 @@
 /* eslint-disable no-new-func, no-useless-escape */
-var allOperators = /(!|&&| AND | OR | NOT |\|\||\(|\)| )/g
+var safeRegexPattern = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g
+var isExpression = /(AND|OR|!|&|\|)/
+
 module.exports = function getValidate (expression) {
   if (Array.isArray(expression)) expression = expression.join(' ')
-  if (!/(AND|OR|!|&|\|)/.test(expression)) expression = expression.split(' ').filter(Boolean).join(' && ')
+  if (!isExpression.test(expression)) expression = expression.split(' ').filter(Boolean).join(' && ')
+  expression = booleanExpression(expression)
 
-  var segments = expression.split(allOperators).filter(Boolean)
-  var checkArray = segments.reduce(gen(true).func, []).join(' ')
+  var checkArray = expression(function (value) {
+    return '!!~scopes.indexOf(\'' + value + '\')'
+  })
 
-  var reducer = gen(false)
-  var checkString = segments.reduce(reducer.func, []).join(' ')
-  var tokens = reducer.tokens.map(toRegExDeclaration).join('\n')
+  var declations = []
+  var checkString = expression(function (value, i) {
+    value = value.replace(safeRegexPattern, '\\$&')
+    declations.push('var a' + i + ' = /(?:^|\\\s)' + value + '(?:\\\s|$)/')
+    return 'a' + i + '.test(scopes)'
+  })
 
-  return new Function([tokens,
+  return new Function([declations.join('\n'),
     'return function validate (scopes) {',
     '  if (typeof scopes === \'string\') return ' + checkString,
     '  return ' + checkArray,
     '}'].join('\n'))()
 }
 
-var nativeOperators = /^(!|&&|\|\||\(|\))$/
-function gen (checkArray) {
-  var tokens = []
-  return {
-    tokens: tokens,
-    func: function rewrite (r, el, i, all) {
-      var t = el.trim()
-      if (!t) return r
-      if (nativeOperators.test(el)) r.push(el)
-      else if (t === 'OR') r.push('||')
-      else if (t === 'AND') r.push('&&')
-      else if (t === 'NOT') r.push('!')
-      else {
-        r.push(el)
-
-        var token = r[r.length - 1].replace(/['\\]/g, '\\$&')
-        if (checkArray) r[r.length - 1] = '!!~scopes.indexOf(\'' + token + '\')'
-        else r[r.length - 1] = 'a' + (tokens.push(token) - 1) + '.test(scopes)'
-      }
-      return r
-    }
+var allOperators = /(!|&&| AND | OR | NOT |\|\||\(|\)| )/g
+function booleanExpression (exp) {
+  exp = exp.split(allOperators).filter(Boolean).reduce(rewrite, [])
+  return function toString (map) {
+    return exp.map(function (t, i, exp) {
+      if (t.type === 'operator') return t.value
+      return (map || expressionToString)(t.value, i)
+    }).join(' ')
   }
 }
 
-function toRegExDeclaration (t, i) {
-  t = t.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
-  return 'var a:1 = /(?:^|\\\s):0(?:\\\s|$)/'.replace(':0', t).replace(':1', i)
+var nativeOperators = /^(!|&&|\|\||\(|\))$/
+var operatorMap = {OR: '||', AND: '&&', NOT: '!'}
+function rewrite (ex, el, i, all) {
+  var t = el.trim()
+  if (!t) return ex
+  if (operatorMap[t]) t = operatorMap[t]
+  if (nativeOperators.test(t)) ex.push({type: 'operator', value: t})
+  else ex.push({type: 'token', value: t.replace(/['\\]/g, '\\$&')})
+  return ex
 }
+
+function expressionToString (token) { return token }
