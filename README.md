@@ -22,8 +22,8 @@ validate('profile user:edit user:archive') // returns true
 // you can use more complex boolean expressions
 var validate = require('validate-scope')('first && second && !third')
 validate(['first']) // returns false
-validate(['first second']) // returns true
-validate(['first second third']) // returns false
+validate(['first', 'second']) // returns true
+validate(['first', 'second', 'third']) // returns false
 ```
 
 # Api
