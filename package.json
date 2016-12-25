@@ -15,6 +15,7 @@
   "scripts": {
     "test": "standard && node test.js"
   },
+  "files": ["index.js"],
   "author": "Marc Bachmann <marc.brookman@gmail.com>",
   "license": "ISC",
   "devDependencies": {
