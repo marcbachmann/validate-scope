@@ -8,20 +8,24 @@ module.exports = function getValidate (expression) {
   if (!isExpression.test(expression)) expression = expression.split(' ').filter(Boolean).join(' && ')
   expression = booleanExpression(expression)
 
-  var checkArray = expression(function (value) {
+  var checkArray = expression.toString(function (value) {
     return '!!~scopes.indexOf(\'' + value + '\')'
   })
 
   var declations = []
-  var checkString = expression(function (value, i) {
+  var checkString = expression.toString(function (value, i) {
     value = value.replace(safeRegexPattern, '\\$&')
     declations.push('var a' + i + ' = /(?:^|\\\s)' + value + '(?:\\\s|$)/')
     return 'a' + i + '.test(scopes)'
   })
 
-  return new Function([declations.join('\n'),
+  var validate = new Function([declations.join('\n'),
     'return function validate (scopes) {',
     '  if (typeof scopes === \'string\') return ' + checkString,
     '  return ' + checkArray,
-    '}'].join('\n'))()
+    '}'
+  ].join('\n'))()
+
+  validate.scopes = expression.toTokens()
+  return validate
 }

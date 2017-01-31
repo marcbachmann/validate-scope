@@ -4,8 +4,10 @@ Checks whether a subset is contained in a list of scopes.
 Uses code generation to reach better performance.
 
 ```js
+var validateScope = require('validate-scope')
+
 // Check only one scope
-var validate = require('validate-scope')(['user:edit'])
+var validate = validateScope(['user:edit'])
 
 // pass an array
 validate(['profile', 'user:edit']) // returns true
@@ -15,12 +17,12 @@ validate(['profile', 'another-scope']) // returns false
 validate('profile user:edit user:archive') // returns true
 
 // or check multiple scopes
-var validate = require('validate-scope')('user:edit AND user:archive')
+var validate = validateScope('user:edit AND user:archive')
 validate('profile user:edit') // returns false
 validate('profile user:edit user:archive') // returns true
 
 // you can use more complex boolean expressions
-var validate = require('validate-scope')('first && second && !third')
+var validate = validateScope('first && second && !third')
 validate(['first']) // returns false
 validate(['first', 'second']) // returns true
 validate(['first', 'second', 'third']) // returns false
@@ -29,9 +31,21 @@ validate(['first', 'second', 'third']) // returns false
 # Api
 
 ```js
-var validate = require('validate-scope')(array|string)
+var validateScope = require('validate-scope')
+```
+
+```js
+var validate = validateScope(array|string)
 validate(array|string) // returns boolean
 ```
+
+
+```js
+var validate = validateScope('(user:edit AND user:archive) OR admin)')
+validate.scopes
+// ['user:edit', 'user:archive', 'admin']
+```
+
 
 I suggest you to save your scopes as array and also pass that to this validation method. String operations are quite slow.
 

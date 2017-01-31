@@ -1,9 +1,19 @@
 var assert = require('assert')
 
+// Test validation method
 test(false, false)
 test(false, true)
 test(true, false)
 test(true, true)
+
+// Test scopes that are contained in expression
+var scope = require('./index')
+assert.deepEqual(scope('foo*qux bar test quz').scopes, ['foo*qux', 'bar', 'test', 'quz'])
+assert.deepEqual(scope('NOT first AND second').scopes, ['first', 'second'])
+assert.deepEqual(
+  scope('!first || (second && third && !fourth)').scopes,
+  ['first', 'second', 'third', 'fourth']
+)
 
 function test (mandatoryAsArray, scopeAsArray) {
   function scopes (mandatory) {
