@@ -31,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/marcbachmann/validate-scope/issues"
   },
-  "homepage": "https://github.com/marcbachmann/validate-scope#readme"
+  "homepage": "https://github.com/marcbachmann/validate-scope#readme",
+  "dependencies": {
+    "boolean-expression": "^1.0.0"
+  }
 }
