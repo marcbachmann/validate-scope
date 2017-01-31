@@ -33,6 +33,6 @@
   },
   "homepage": "https://github.com/marcbachmann/validate-scope#readme",
   "dependencies": {
-    "boolean-expression": "^1.0.0"
+    "boolean-expression": "^2.0.0"
   }
 }
