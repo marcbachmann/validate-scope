@@ -1,6 +1,6 @@
 {
   "name": "validate-scope",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Checks whether a subset is contained in a list of scopes. Uses code generation",
   "main": "index.js",
   "keywords": [
