@@ -21,7 +21,7 @@
   "author": "Marc Bachmann <marc.brookman@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "nanobench": "^1.0.1",
+    "nanobench": "^2.0.0",
     "standard": "^10.0.0"
   },
   "repository": {
