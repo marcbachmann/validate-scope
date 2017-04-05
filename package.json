@@ -22,7 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "nanobench": "^1.0.1",
-    "standard": "^9.0.2"
+    "standard": "^10.0.0"
   },
   "repository": {
     "type": "git",
