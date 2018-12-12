@@ -1,4 +1,6 @@
 # validate-scope
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmarcbachmann%2Fvalidate-scope.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmarcbachmann%2Fvalidate-scope?ref=badge_shield)
+
 
 Checks whether a subset is contained in a list of scopes.
 Uses code generation to reach better performance.
@@ -69,3 +71,7 @@ NANOBENCH version 1
 
 # ok
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmarcbachmann%2Fvalidate-scope.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmarcbachmann%2Fvalidate-scope?ref=badge_large)
