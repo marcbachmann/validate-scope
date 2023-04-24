@@ -25,6 +25,18 @@ bench('validate(["some", "scopes", "as", "array"])', function (b) {
   b.end()
 })
 
+bench('validate(new Set(["some", "scopes", "as", "array"]))', function (b) {
+  const scope = require('./')(mandatory)
+  const arr = scopes.split(' ')
+  b.start()
+
+  for (let i = 0; i < 10e7; i++) {
+    scope(arr)
+  }
+
+  b.end()
+})
+
 bench('traditional string split & array indexOf', function (b) {
   const scope = mandatory
   let arr

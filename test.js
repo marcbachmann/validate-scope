@@ -26,6 +26,7 @@ function test (mandatoryAsArray, scopeAs = 'string') {
 
     return function (val) {
       if (scopeAs === 'array') return check(val.split(' '))
+      else if (scopeAs === 'set') return check(new Set(val.split(' ')))
       else return check(val)
     }
   }

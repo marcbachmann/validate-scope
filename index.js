@@ -12,6 +12,10 @@ module.exports = function getValidate (expression) {
     return `scopes.includes(${JSON.stringify(value)})`
   })
 
+  const checkSet = expression.toString(function (value) {
+    return `scopes.has(${JSON.stringify(value)})`
+  })
+
   const declations = []
   const checkString = expression.toString(function (value, i) {
     value = value.replace(safeRegexPattern, '\\$&')
@@ -22,6 +26,7 @@ module.exports = function getValidate (expression) {
   const validate = new Function([declations.join('\n'),
     'return function validate (scopes) {',
     `  if (typeof scopes === 'string') return ${checkString}`,
+    `  if (scopes instanceof Set) return ${checkSet}`,
     `  return ${checkArray}`,
     '}'
   ].join('\n'))()
