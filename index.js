@@ -1,28 +1,28 @@
 /* eslint-disable no-new-func, no-useless-escape */
-var safeRegexPattern = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g
-var isExpression = /(AND|OR|!|&|\|)/
-var booleanExpression = require('boolean-expression')
+const safeRegexPattern = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g
+const isExpression = /(AND|OR|!|&|\|)/
+const booleanExpression = require('boolean-expression')
 
 module.exports = function getValidate (expression) {
   if (Array.isArray(expression)) expression = expression.join(' ')
   if (!isExpression.test(expression)) expression = expression.split(' ').filter(Boolean).join(' && ')
   expression = booleanExpression(expression)
 
-  var checkArray = expression.toString(function (value) {
-    return '!!~scopes.indexOf(\'' + value + '\')'
+  const checkArray = expression.toString(function (value) {
+    return `scopes.includes(${JSON.stringify(value)})`
   })
 
-  var declations = []
-  var checkString = expression.toString(function (value, i) {
+  const declations = []
+  const checkString = expression.toString(function (value, i) {
     value = value.replace(safeRegexPattern, '\\$&')
-    declations.push('var a' + i + ' = /(?:^|\\\s)' + value + '(?:\\\s|$)/')
-    return 'a' + i + '.test(scopes)'
+    declations.push(`const a${i} = /(?:^|\\\s)${value}(?:\\\s|$)/`)
+    return `a${i}.test(scopes)`
   })
 
-  var validate = new Function([declations.join('\n'),
+  const validate = new Function([declations.join('\n'),
     'return function validate (scopes) {',
-    '  if (typeof scopes === \'string\') return ' + checkString,
-    '  return ' + checkArray,
+    `  if (typeof scopes === 'string') return ${checkString}`,
+    `  return ${checkArray}`,
     '}'
   ].join('\n'))()
 

@@ -1,12 +1,12 @@
-var bench = require('nanobench')
-var mandatory = ['user:edit']
-var scopes = 'user:edit document:write document:read list:manage user:archive'
+const bench = require('nanobench')
+const mandatory = ['user:edit']
+const scopes = 'user:edit document:write document:read list:manage user:archive'
 
 bench('validate("some space separate scopes")', function (b) {
-  var scope = require('./')(mandatory)
+  const scope = require('./')(mandatory)
   b.start()
 
-  for (var i = 0; i < 10e7; i++) {
+  for (let i = 0; i < 10e7; i++) {
     scope(scopes)
   }
 
@@ -14,11 +14,11 @@ bench('validate("some space separate scopes")', function (b) {
 })
 
 bench('validate(["some", "scopes", "as", "array"])', function (b) {
-  var scope = require('./')(mandatory)
-  var arr = scopes.split(' ')
+  const scope = require('./')(mandatory)
+  const arr = new Set(scopes.split(' '))
   b.start()
 
-  for (var i = 0; i < 10e7; i++) {
+  for (let i = 0; i < 10e7; i++) {
     scope(arr)
   }
 
@@ -26,13 +26,13 @@ bench('validate(["some", "scopes", "as", "array"])', function (b) {
 })
 
 bench('traditional string split & array indexOf', function (b) {
-  var scope = mandatory
-  var arr
+  const scope = mandatory
+  let arr
   b.start()
 
-  for (var i = 0; i < 10e7; i++) {
+  for (let i = 0; i < 10e7; i++) {
     arr = scopes.split(' ')
-    for (var j = 0; j < scope.length; j++) {
+    for (let j = 0; j < scope.length; j++) {
       if (arr.indexOf(scope[j]) === -1) continue
     }
   }
@@ -41,11 +41,11 @@ bench('traditional string split & array indexOf', function (b) {
 })
 
 bench('traditional for loop & array indexOf', function (b) {
-  var scope = mandatory
-  var arr = scopes.split(' ')
+  const scope = mandatory
+  const arr = scopes.split(' ')
   b.start()
 
-  for (var i = 0; i < 10e7; i++) {
+  for (let i = 0; i < 10e7; i++) {
     contains(scope, arr)
   }
 
@@ -53,7 +53,7 @@ bench('traditional for loop & array indexOf', function (b) {
 })
 
 function contains (mandatory, scopes) {
-  for (var i = 0; i < mandatory.length; i++) {
+  for (let i = 0; i < mandatory.length; i++) {
     if (!~scopes.indexOf(mandatory[i])) return false
   }
   return true
